@@ -1,5 +1,7 @@
 # BinarySoftwear: Cloud-Native E-commerce Platform on AWS with Terraform
 
+![BinarySoftwear Banner](./documentation/binarysowftwear_github.png)
+
 [![WordPress](https://img.shields.io/badge/Platform-WordPress-21759B?style=for-the-badge&logo=wordpress)](https://wordpress.org/)
 [![WooCommerce](https://img.shields.io/badge/Engine-WooCommerce-96588A?style=for-the-badge&logo=woocommerce)](https://woocommerce.com/)
 [![AWS](https://img.shields.io/badge/Infrastructure-AWS-FF9900?style=for-the-badge&logo=amazon-aws)](https://aws.amazon.com/)
