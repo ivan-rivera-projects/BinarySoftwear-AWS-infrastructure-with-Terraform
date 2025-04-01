@@ -10,11 +10,11 @@
 
 ## Executive Summary
 
-Welcome to the BinarySoftwear project! This repository represents a comprehensive demonstration of deploying and managing a **production-grade e-commerce web application** ([BinarySoftwear.com](https://d1yi6dtz2qg5ym.cloudfront.net/)) entirely on **Amazon Web Services (AWS)**. The infrastructure is meticulously defined and automated using **Terraform**, adhering strictly to **Infrastructure as Code (IaC)** principles.
+Welcome to the BinarySoftwear project! This repository represents a comprehensive demonstration of deploying and managing a **production-grade e-commerce web application** ([BinarySoftwear.com](https://binarysoftwear.com/)) entirely on **Amazon Web Services (AWS)**. The infrastructure is meticulously defined and automated using **Terraform**, adhering strictly to **Infrastructure as Code (IaC)** principles.
 
-The project showcases the successful migration of a WordPress/WooCommerce application from traditional hosting to a modern, **highly available, scalable, secure, and performance-optimized AWS environment**. It serves as a practical portfolio piece, highlighting expertise in cloud architecture, automation, security, cost optimization, and full-stack deployment practices relevant for DevOps, Cloud Engineering, and Infrastructure roles.
+The project showcases the successful migration of a WordPress/WooCommerce application from traditional hosting to a modern, **highly available, scalable, secure, and performance-optimized AWS environment**. It serves a **twofold nature as a LIVE SITE** for my new streetwear brand dedicated towards IT Professionals and Nerds like myself while **also a practical portfolio piece, highlighting expertise in cloud architecture, automation, security, cost optimization, and full-stack deployment practices relevant for DevOps, Cloud Engineering, and Infrastructure roles**.
 
-**Live Site:** [https://d1yi6dtz2qg5ym.cloudfront.net/](https://d1yi6dtz2qg5ym.cloudfront.net/) *(Note: URL points directly to the CloudFront distribution)*
+**Live Site:** [https://binarysoftwear.com/](https://binarysoftwear.com/)
 
 ---
 
@@ -212,28 +212,6 @@ Several strategies are employed to manage AWS costs effectively:
 
 ---
 
-## Project Structure
-
-/Users/ivanrivera/Downloads/AWS/binarysoftwear/
-├── binarysoftwear-infra/ # Terraform code for AWS infrastructure
-│ ├── documentation/ # Infrastructure diagrams & related docs
-│ │ ├── aws_architecture.py # Python script to generate diagram
-│ │ └── (README includes diagram from root)
-│ ├── .tf # Terraform configuration files
-│ ├── terraform.tfvars.example # Example variables file
-│ └── README.md # Detailed infrastructure README
-├── documentation/ # Contains generated architecture diagram
-│ └── binarysoftwear_architecture.png
-├── migration/ # Scripts potentially used for one-time migration
-│ ├── setup_memcached.sh
-│ └── ...
-├── .gitignore # Specifies intentionally untracked files
-└── README.md # This file: Root application README
-
-*(Note: WordPress core/plugin files are served from EFS and not typically included directly in the infrastructure repository)*
-
----
-
 ## Deployment Process
 
 Deploying this infrastructure requires Terraform and configured AWS credentials.
@@ -269,9 +247,6 @@ This robust foundation enables several potential future improvements:
 
 *   **CI/CD Pipeline:** Implement automated testing and deployment for both infrastructure (Terraform) and application (WordPress updates) using tools like GitHub Actions, AWS CodePipeline, or Jenkins.
 *   **Centralized Logging & Monitoring:** Configure centralized logging (e.g., CloudWatch Logs Agent, ELK stack) and create detailed CloudWatch Dashboards for better observability.
-*   **AWS Backup:** Implement a comprehensive backup plan using AWS Backup to manage RDS snapshots and EFS backups centrally.
-*   **Disaster Recovery:** Develop and test a DR plan, potentially involving cross-region replication for critical data (RDS, EFS).
-*   **Blue/Green Deployments:** Implement strategies for zero-downtime application releases.
 *   **Containerization:** Explore migrating the WordPress application to containers (e.g., Docker on ECS or EKS) for enhanced portability and deployment flexibility.
 
 ---
@@ -279,8 +254,7 @@ This robust foundation enables several potential future improvements:
 ## Contact
 
 *   **Author:** Ivan Rivera
-*   **LinkedIn:** [Your LinkedIn Profile URL]
-*   **Portfolio:** [Your Portfolio URL (Optional)]
+*   **Portfolio:** [https://iam-ivan.com](https://iam-ivan.com)
 *   **Email:** [ivan.rivera.email@gmail.com](mailto:ivan.rivera.email@gmail.com)
 
 ---
