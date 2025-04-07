@@ -6,7 +6,7 @@ resource "aws_cloudfront_distribution" "main" {
   # This distribution is managed both by Terraform and W3 Total Cache
   # Be careful when making changes - W3TC may make its own modifications
 
-  enabled             = false
+  enabled             = true # Enable the distribution
   is_ipv6_enabled     = true
   comment             = "Created by W3-Total-Cache"
   default_root_object = "index.php"
@@ -21,7 +21,7 @@ resource "aws_cloudfront_distribution" "main" {
     custom_origin_config {
       http_port              = 80
       https_port             = 443
-      origin_protocol_policy = "http-only"
+      origin_protocol_policy = "https-only" # Ensure CloudFront connects via HTTPS
       origin_ssl_protocols   = ["TLSv1.2"]
       origin_read_timeout    = 30
       origin_keepalive_timeout = 5
@@ -156,14 +156,14 @@ resource "aws_cloudfront_distribution" "main" {
   # Define external ID for the resource - this must match the W3TC created distribution ID
   # When used with 'terraform import', this ensures Terraform manages the existing resource
   # without trying to create a new one or delete the existing one.
-  lifecycle {
-    ignore_changes = [
-      # W3TC may make changes to these attributes, so we should ignore them
-      default_cache_behavior,
-      ordered_cache_behavior,
-      origin,
-      aliases,
-      comment
-    ]
-  }
+  # lifecycle { # Temporarily commented out to allow enabling the distribution
+  #   ignore_changes = [
+  #     # W3TC may make changes to these attributes, so we should ignore them
+  #     default_cache_behavior,
+  #     ordered_cache_behavior,
+  #     origin,
+  #     aliases,
+  #     comment
+  #   ]
+  # }
 }
