@@ -3,6 +3,10 @@ resource "aws_db_subnet_group" "main" {
   subnet_ids = [for s in aws_subnet.private : s.id]
   tags       = { Name = "binarysoftwear-rds-subnet-group" }
 }
+# Data source to retrieve the secret value from Secrets Manager
+data "aws_secretsmanager_secret_version" "db_creds" {
+  secret_id = aws_secretsmanager_secret.db_secret.id # Reference the secret created in secrets_manager.tf
+}
 
 resource "aws_db_instance" "main" {
   identifier             = "binarysoftwear-rds"
@@ -16,8 +20,9 @@ resource "aws_db_instance" "main" {
   vpc_security_group_ids = [aws_security_group.rds_sg.id]
 
   db_name  = var.db_name
-  username = var.db_username
-  password = var.db_password
+  # Use credentials directly from Secrets Manager
+  username = jsondecode(data.aws_secretsmanager_secret_version.db_creds.secret_string)["username"]
+  password = jsondecode(data.aws_secretsmanager_secret_version.db_creds.secret_string)["password"]
 
   # Performance optimizations
   max_allocated_storage = 100
