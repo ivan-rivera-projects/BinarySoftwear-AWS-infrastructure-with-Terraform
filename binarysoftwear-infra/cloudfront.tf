@@ -6,7 +6,7 @@ resource "aws_cloudfront_distribution" "main" {
   # This distribution is managed both by Terraform and W3 Total Cache
   # Be careful when making changes - W3TC may make its own modifications
 
-  enabled             = true # Enable the distribution
+  enabled             = false # Disable distribution for troubleshooting
   is_ipv6_enabled     = true
   comment             = "Created by W3-Total-Cache"
   default_root_object = "index.php"
@@ -59,7 +59,7 @@ resource "aws_cloudfront_distribution" "main" {
       }
     }
 
-    viewer_protocol_policy = "redirect-to-https"
+    viewer_protocol_policy = "allow-all" # Temporarily allow HTTP to test redirect loop
     min_ttl                = 0
     default_ttl            = 0 # Don't cache dynamic content by default
     max_ttl                = 0

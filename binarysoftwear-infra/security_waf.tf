@@ -40,13 +40,7 @@ resource "aws_security_group" "ec2_sg" {
     security_groups = [aws_security_group.alb_sg.id]
   }
 
-  ingress {
-    description     = "HTTPS from ALB"
-    from_port       = 443
-    to_port         = 443
-    protocol        = "tcp"
-    security_groups = [aws_security_group.alb_sg.id]
-  }
+  # Removed incorrect rule allowing HTTPS from ALB (ALB sends HTTP to instances)
 
   ingress {
     description     = "SSH access from Bastion"
@@ -96,6 +90,30 @@ resource "aws_security_group" "rds_sg" {
   }
 
   tags = { Name = "binarysoftwear-rds-sg" }
+}
+
+# EFS Security Group
+resource "aws_security_group" "efs_sg" {
+  name   = "binarysoftwear-efs-sg"
+  vpc_id = aws_vpc.main.id
+
+  ingress {
+    description     = "NFS from EC2 SG"
+    from_port       = 2049
+    to_port         = 2049
+    protocol        = "tcp"
+    security_groups = [aws_security_group.ec2_sg.id] # Allow from EC2 instances
+  }
+
+  # Egress can be restrictive if needed, but default allow all is often fine
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = { Name = "binarysoftwear-efs-sg" }
 }
 
 # Regional WAFv2 Web ACL for ALB

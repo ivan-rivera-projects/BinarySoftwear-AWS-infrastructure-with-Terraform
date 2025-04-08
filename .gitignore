@@ -1,0 +1,113 @@
+# Terraform-specific ignores
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfplan
+.terraformrc
+terraform.rc
+.terraform.lock.hcl
+variables.tf
+
+# WordPress core files (if ever included locally)
+wp-content/uploads/
+wp-content/cache/
+wp-config.php
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+desktop.ini
+*BACKUP.html*
+*.*BACKUP
+*.*OLD
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Log files
+*.log
+logs/
+npm-debug.log*
+
+# Dependency directories (if applicable)
+node_modules/
+vendor/
+
+# Credentials and secrets
+.env
+*.pem
+*.key
+*.crt
+# Backend files (if ever downloaded locally)
+.backend/
+.cursor/
+
+# Miscellaneous
+.tmp/
+tmp/
+temp/
+
+# Specific ignores for binarysoftwear-infra subdirectories
+binarysoftwear-infra/backups/
+binarysoftwear-infra/database/
+binarysoftwear-infra/docs/
+binarysoftwear-infra/logs/
+binarysoftwear-infra/plans/
+binarysoftwear-infra/secure/
+# Note: binarysoftwear-infra/scripts/ is intentionally NOT ignored
+
+# General ignores (if they exist at the root)
+backups/
+database/
+docs/
+plans/
+# scripts/ # Root scripts might be needed, comment out if necessary
+secure/
+myenv/
+migration/
+
+# AWS credentials
+.aws/
+
+# Terraform state
+terraform.tfstate
+
+# Python virtual environments and cache
+venv/
+env/
+ENV/
+.env/
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+
+# Specific documentation files to ignore
+documentation/iam-ivan.com_aws_cloud_resume_challenge_architecture.png
+documentation/iam-ivan_aws_architecture.py
+
+# Ignore specific JSON files
+update-cloudfront.json

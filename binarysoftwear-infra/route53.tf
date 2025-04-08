@@ -4,7 +4,7 @@ data "aws_route53_zone" "main" {
   private_zone = false
 }
 
-# Alias record to ALB (bypassing CloudFront due to issues)
+# Alias record to ALB (bypassing CloudFront for troubleshooting)
 resource "aws_route53_record" "root_alias" {
   zone_id = data.aws_route53_zone.main.zone_id
   name    = var.domain_name
@@ -13,11 +13,11 @@ resource "aws_route53_record" "root_alias" {
   alias {
     name                   = aws_lb.main.dns_name
     zone_id                = aws_lb.main.zone_id
-    evaluate_target_health = false
+    evaluate_target_health = false # Cannot evaluate ALB health directly in Route 53 alias
   }
 }
 
-# WWW alias record to ALB (bypassing CloudFront due to issues)
+# WWW alias record to ALB (bypassing CloudFront for troubleshooting)
 resource "aws_route53_record" "www_alias" {
   zone_id = data.aws_route53_zone.main.zone_id
   name    = "www.${var.domain_name}"
@@ -26,6 +26,6 @@ resource "aws_route53_record" "www_alias" {
   alias {
     name                   = aws_lb.main.dns_name
     zone_id                = aws_lb.main.zone_id
-    evaluate_target_health = false
+    evaluate_target_health = false # Cannot evaluate ALB health directly in Route 53 alias
   }
 }
