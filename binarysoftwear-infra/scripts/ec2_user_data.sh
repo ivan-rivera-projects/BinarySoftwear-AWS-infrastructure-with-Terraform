@@ -1,6 +1,28 @@
 #!/bin/bash
-set -e
+# Enable error handling and logging
+set -e # Exit on error
+set -o pipefail # Exit if any command in a pipe fails
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+
+# Function for error handling
+handle_error() {
+  local exit_code=$?
+  local line_number=$1
+  echo "Error on line $line_number: Command exited with status $exit_code"
+  # Optional: add AWS SNS notification or other alerts here
+}
+
+# Set up error trap
+trap 'handle_error $LINENO' ERR
+
+# Log start time and instance information
+echo "===== Starting EC2 instance configuration at $(date) ====="
+INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+INSTANCE_TYPE=$(curl -s http://169.254.169.254/latest/meta-data/instance-type)
+AVAILABILITY_ZONE=$(curl -s http://169.254.169.254/latest/meta-data/placement/availability-zone)
+echo "Instance ID: $INSTANCE_ID"
+echo "Instance Type: $INSTANCE_TYPE"
+echo "Availability Zone: $AVAILABILITY_ZONE"
 yum update -y
 amazon-linux-extras enable php8.2
 yum install -y httpd php php-mysqlnd php-json php-gd php-mbstring php-xml php-intl php-soap php-zip mariadb amazon-efs-utils jq aws-cli php-opcache php-apcu php-curl
@@ -153,7 +175,14 @@ else
   echo "$EFS_ID:/ /var/www/html efs defaults,_netdev,tls 0 0" >> /etc/fstab
 fi
 
-cat >/etc/httpd/conf.d/wordpress.conf<<EOT
+# Create a clean, separate WordPress Apache configuration
+# Create Apache configuration directory if it doesn't exist
+mkdir -p /etc/httpd/conf.d
+
+# Create WordPress Apache configuration
+# Use 'cat' with a heredoc for clean Apache configuration
+echo "Creating Apache configuration for WordPress..."
+cat > /etc/httpd/conf.d/wordpress.conf << 'APACHE_CONFIG'
 <VirtualHost *:80>
     ServerName binarysoftwear.com
     ServerAlias www.binarysoftwear.com
@@ -177,7 +206,18 @@ cat >/etc/httpd/conf.d/wordpress.conf<<EOT
     ErrorLog /var/log/httpd/wordpress-error.log
     CustomLog /var/log/httpd/wordpress-access.log combined
 </VirtualHost>
-EOT
+APACHE_CONFIG
+
+# Ensure Apache configuration is valid
+echo "Validating Apache configuration..."
+if ! apachectl configtest; then
+    echo "ERROR: Apache configuration test failed!"
+    echo "Contents of wordpress.conf:"
+    cat /etc/httpd/conf.d/wordpress.conf
+    exit 1
+else
+    echo "Apache configuration is valid."
+fi
 
 # Create and configure .htaccess
 cat >/var/www/html/.htaccess<<EOT
@@ -246,6 +286,20 @@ echo "</pre>";
 ?>
 EOT
 
+# Create a static health check file for ALB health checks
+cat > /var/www/html/health.html << 'EOT'
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BinarySoftwear - Health Check</title>
+</head>
+<body>
+    <h1>OK</h1>
+    <p>Server is healthy</p>
+</body>
+</html>
+EOT
+
 # Configure W3TC to use Memcached
 # First, check if wp-config.php exists and W3TC is active
 if [ -f "/var/www/html/wp-config.php" ] && [ -d "/var/www/html/wp-content/plugins/w3-total-cache" ]; then
@@ -282,3 +336,36 @@ find /var/www/html -type f -exec chmod 644 {} \;
 
 # Restart Apache to apply all changes
 systemctl restart httpd
+
+# Verify Apache is running and health check file is accessible
+if systemctl is-active --quiet httpd; then
+  echo "Apache is running successfully."
+  
+  # Test if health.html is accessible via localhost
+  if curl -s http://localhost/health.html | grep -q "Server is healthy"; then
+    echo "Health check file is accessible."
+  else
+    echo "WARNING: Health check file is not accessible!"
+    # Create it again if it's missing
+    cat > /var/www/html/health.html << 'EOT'
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BinarySoftwear - Health Check</title>
+</head>
+<body>
+    <h1>OK</h1>
+    <p>Server is healthy</p>
+</body>
+</html>
+EOT
+    chown apache:apache /var/www/html/health.html
+    chmod 644 /var/www/html/health.html
+    echo "Health check file recreated."
+  fi
+else
+  echo "ERROR: Apache failed to start! Check logs for details."
+  cat /var/log/httpd/error_log | tail -n 20
+fi
+
+echo "===== EC2 user data script completed at $(date) ====="

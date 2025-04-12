@@ -69,12 +69,12 @@ resource "aws_lb_target_group" "main" {
   health_check {
     protocol            = "HTTP"
     port                = "traffic-port"
-    path                = "/"
+    path                = "/health.html"
     unhealthy_threshold = 3
     healthy_threshold   = 2
     timeout             = 5
     interval            = 30
-    matcher             = "200-499"
+    matcher             = "200"
   }
   tags = {
     Name = "binarysoftwear-tg"
