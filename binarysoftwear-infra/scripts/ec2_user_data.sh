@@ -66,8 +66,9 @@ EOT
 # Add specific WordPress PHP settings to increase limits
 cat >/etc/php.d/30-wordpress.ini<<EOT
 upload_max_filesize = 64M
-post_max_size = 128M
+post_max_size = 64M
 max_execution_time = 300
+memory_limit = 256M
 max_input_vars = 3000
 EOT
 
