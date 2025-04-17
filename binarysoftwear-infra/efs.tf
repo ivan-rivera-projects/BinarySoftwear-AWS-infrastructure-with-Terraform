@@ -3,9 +3,7 @@ resource "aws_efs_file_system" "main" {
   performance_mode = "maxIO"
   encrypted        = true
 
-  # Add provisioned throughput for better performance
-  provisioned_throughput_in_mibps = 10
-  throughput_mode                 = "provisioned"
+  throughput_mode = "bursting"
 
   tags = {
     Name = "binarysoftwear-efs"
