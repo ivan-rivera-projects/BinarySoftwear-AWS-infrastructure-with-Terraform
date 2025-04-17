@@ -1,14 +1,13 @@
-# CloudFront distribution for the WordPress site - Imported from W3 Total Cache
+# CloudFront distribution for the WordPress site
 resource "aws_cloudfront_distribution" "main" {
   # Provider for us-east-1
   provider = aws.us-east-1
 
-  # This distribution is managed both by Terraform and W3 Total Cache
-  # Be careful when making changes - W3TC may make its own modifications
+  # This distribution is managed by Terraform
 
-  enabled             = false # Disable distribution for troubleshooting
+  enabled             = true
   is_ipv6_enabled     = true
-  comment             = "Created by W3-Total-Cache"
+  comment             = "BinarySoftwear CDN Distribution"
   default_root_object = "index.php"
   price_class         = "PriceClass_100"
   aliases             = [var.domain_name, "www.${var.domain_name}"]
@@ -59,7 +58,7 @@ resource "aws_cloudfront_distribution" "main" {
       }
     }
 
-    viewer_protocol_policy = "allow-all" # Temporarily allow HTTP to test redirect loop
+    viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 0
     default_ttl            = 0 # Don't cache dynamic content by default
     max_ttl                = 0
@@ -153,17 +152,5 @@ resource "aws_cloudfront_distribution" "main" {
   # WAF integration
   web_acl_id = aws_wafv2_web_acl.cloudfront_waf_acl.arn
 
-  # Define external ID for the resource - this must match the W3TC created distribution ID
-  # When used with 'terraform import', this ensures Terraform manages the existing resource
-  # without trying to create a new one or delete the existing one.
-  # lifecycle { # Temporarily commented out to allow enabling the distribution
-  #   ignore_changes = [
-  #     # W3TC may make changes to these attributes, so we should ignore them
-  #     default_cache_behavior,
-  #     ordered_cache_behavior,
-  #     origin,
-  #     aliases,
-  #     comment
-  #   ]
-  # }
+  # lifecycle block removed to ensure Terraform has full control.
 }
