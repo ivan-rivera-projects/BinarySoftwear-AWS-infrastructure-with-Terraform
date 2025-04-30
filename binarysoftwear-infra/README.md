@@ -83,7 +83,7 @@ Distributed under the MIT License. See `LICENSE` file for more information.
 
 ## Contact
 
-*   **Author:** [Your Name / Ivan Rivera]
-*   **LinkedIn:** [Your LinkedIn Profile URL]
-*   **Portfolio:** [Your Portfolio URL (Optional)]
+*   **Author:** [Ivan Rivera]
+*   **LinkedIn:** []
+*   **Portfolio:** [iam-ivan.com]
 *   **Email:** [ivan.rivera.email@gmail.com](mailto:ivan.rivera.email@gmail.com)
